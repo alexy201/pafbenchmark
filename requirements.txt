@@ -1,18 +1,132 @@
-apex==0.9.10dev
-bbox_visualizer==0.1.0
-einops==0.7.0
+absl-py==2.1.0
+aiohappyeyeballs==2.4.3
+aiohttp==3.10.10
+aiosignal==1.3.1
+annotated-types==0.7.0
+antlr4-python3-runtime==4.9.3
+async-timeout==4.0.3
+attrs==24.2.0
+av==13.1.0
+bbox-visualizer==0.1.0
+Brotli @ file:///home/conda/feedstock_root/build_artifacts/brotli-split_1695989787169/work
+certifi==2022.12.7
+charset-normalizer==2.1.1
+click==8.1.8
+cmake==3.25.0
+colorama @ file:///home/conda/feedstock_root/build_artifacts/colorama_1666700638685/work
+contourpy==1.2.1
+cupy-cuda11x==13.2.0
+cycler @ file:///home/conda/feedstock_root/build_artifacts/cycler_1696677705766/work
+datasets==3.1.0
+decord==0.6.0
+dill @ file:///home/conda/feedstock_root/build_artifacts/dill_1706434688412/work
+docker-pycreds==0.4.0
+einops==0.8.0
+et-xmlfile @ file:///home/conda/feedstock_root/build_artifacts/et_xmlfile_1674664118162/work
+fastrlock==0.8.2
+filelock==3.13.1
+fonttools==4.51.0
+frozenlist==1.5.0
+fsspec @ file:///home/conda/feedstock_root/build_artifacts/fsspec_1719514913127/work
+fvcore==0.1.5.post20221221
+gitdb==4.0.12
+GitPython==3.1.44
+grad-cam==1.5.4
+grpcio==1.65.4
 h5py==3.9.0
 hdf5plugin==4.1.3
+huggingface-hub==0.24.5
 hydra-core==1.3.2
-numpy==1.22.4
+idna==3.4
+iopath==0.1.10
+Jinja2==3.1.4
+joblib==1.4.2
+kiwisolver==1.4.5
+lightning-utilities==0.14.3
+lit==15.0.7
+Markdown==3.6
+MarkupSafe==2.1.5
+matplotlib==3.8.2
+mpmath==1.3.0
+multidict==6.1.0
+multiprocess==0.70.16
+munkres==1.1.4
+networkx==3.3
+numpy==1.23.0
+nvidia-cublas-cu11==11.10.3.66
+nvidia-cuda-cupti-cu11==11.7.101
+nvidia-cuda-nvrtc-cu11==11.7.99
+nvidia-cuda-runtime-cu11==11.7.99
+nvidia-cudnn-cu11==8.5.0.96
+nvidia-cufft-cu11==10.9.0.58
+nvidia-curand-cu11==10.2.10.91
+nvidia-cusolver-cu11==11.4.0.1
+nvidia-cusparse-cu11==11.7.4.91
+nvidia-nccl-cu11==2.14.3
+nvidia-nvtx-cu11==11.7.91
 omegaconf==2.3.0
-opencv_python==4.8.0.76
-packaging==23.2
+opencv-python==4.10.0.84
+openpyxl @ file:///home/conda/feedstock_root/build_artifacts/openpyxl_1725460826776/work
+packaging==24.0
+pandas @ file:///home/conda/feedstock_root/build_artifacts/pandas_1715897614105/work
+parameterized==0.9.0
+patsy @ file:///home/conda/feedstock_root/build_artifacts/patsy_1704469236901/work
+pillow==11.0.0
+platformdirs==4.3.6
+portalocker==2.10.1
+propcache==0.2.0
+protobuf==4.25.4
+psutil==6.1.0
+pyarrow==18.0.0
 pycocotools==2.0.6
-pytorch_lightning==1.8.6
-spikingjelly==0.0.0.0.14
+pydantic==2.10.5
+pydantic_core==2.27.2
+pyparsing==3.1.2
+PySocks @ file:///home/conda/feedstock_root/build_artifacts/pysocks_1661604839144/work
+python-dateutil @ file:///croot/python-dateutil_1716495738603/work
+pytorch-gradcam==0.2.1
+pytorch-lightning==1.8.6
+pytorchvideo==0.1.5
+pytz @ file:///home/conda/feedstock_root/build_artifacts/pytz_1706886791323/work
+PyYAML==6.0.1
+requests==2.32.3
+safetensors==0.4.3
+scikit-learn==1.5.2
+scipy==1.13.0
+seaborn @ file:///home/conda/feedstock_root/build_artifacts/seaborn-split_1714494649443/work
+sentry-sdk==2.19.2
+setproctitle==1.3.4
+simplejson==3.19.3
+six @ file:///home/conda/feedstock_root/build_artifacts/six_1620240208055/work
+smmap==5.0.2
+spikingjelly==0.0.0.0.15
+statsmodels @ file:///home/conda/feedstock_root/build_artifacts/statsmodels_1727986707121/work
 StrEnum==0.4.15
-torch==2.0.1+cu118
+sympy==1.13.1
+tabulate==0.9.0
+tensorboard==2.17.0
+tensorboard-data-server==0.7.2
+tensorboardX==2.6.2.2
+termcolor==2.5.0
+thop==0.1.1.post2209072238
+threadpoolctl==3.5.0
+timm==0.5.4
+torch==2.0.1+cu117
+torchaudio==0.13.1
 torchdata==0.6.1
-torchvision==0.15.2+cu118
-tqdm==4.65.0
+torchinfo @ file:///home/conda/feedstock_root/build_artifacts/torchinfo_1684097133203/work
+torchmetrics==1.7.1
+torchvision==0.15.2+cu117
+tqdm==4.67.0
+triton==2.0.0
+ttach==0.0.3
+typing_extensions==4.12.2
+tzdata @ file:///home/conda/feedstock_root/build_artifacts/python-tzdata_1707747584337/work
+unicodedata2 @ file:///home/conda/feedstock_root/build_artifacts/unicodedata2_1729704533769/work
+urllib3==1.26.13
+wandb==0.19.2
+Werkzeug==3.0.3
+wget==3.2
+xxhash==3.5.0
+yacs==0.1.8
+yarl==1.17.1

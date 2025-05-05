@@ -56,7 +56,7 @@ def main(config: DictConfig):
     assert distributed_backend in ('nccl', 'gloo'), f'{distributed_backend=}'
 
     strategy = DDPStrategy(process_group_backend=distributed_backend,
-                           find_unused_parameters=False,
+                           find_unused_parameters=True,
                            gradient_as_bucket_view=True) if len(gpus) > 1 else None
 
     # ---------------------
@@ -67,8 +67,8 @@ def main(config: DictConfig):
     # ---------------------
     # Logging and Checkpoints
     # ---------------------
-    tb_logger = TensorBoardLogger(save_dir='./simple_down_sample_all_batchnorm',
-                                  name='spikingDetection_gen1',
+    tb_logger = TensorBoardLogger(save_dir='/vast/palmer/pi/panda/as4296/vit/simple_down_sample_all_batchnorm',
+                                  name='spikingDetection_paf',
                                   version='____',
                                   sub_dir='seq_length_5',
                                   log_graph=False)

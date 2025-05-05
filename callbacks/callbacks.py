@@ -2,7 +2,7 @@ from omegaconf import DictConfig
 from pytorch_lightning import Callback
 from pytorch_lightning.callbacks import ModelCheckpoint
 
-from callbacks.vis_callback import DetectionVizCallback
+from callbacks.vis_callback import DetectionVizCallback, EmptyCallback
 
 
 def get_ckpt_callback() -> ModelCheckpoint:
@@ -25,4 +25,12 @@ def get_ckpt_callback() -> ModelCheckpoint:
     return ckpt_callback
 
 def get_viz_callback(config: DictConfig) -> Callback:
+    # if high-dim logging is globally off, skip
+    if not config.logging.train.high_dim.enable and not config.logging.validation.high_dim.enable:
+        return EmptyCallback()
+
+    # for paf_event we don’t yet have viz logic, so skip
+    if config.dataset.name == 'paf_event':
+        return EmptyCallback()
+
     return DetectionVizCallback(config=config)

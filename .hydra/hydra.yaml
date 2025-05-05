@@ -1,0 +1,179 @@
+hydra:
+  run:
+    dir: /gpfs/gibbs/project/panda/as4296/SpikingVit
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(name)s][%(levelname)s] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: RUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.run.dir="/gpfs/gibbs/project/panda/as4296/SpikingVit"
+    - hydra.job.name=train_ddp_process_7
+    - hydra.mode=RUN
+    task:
+    - model=rnndet
+    - encoder_model=encoder
+    - dataset=gen1
+    - +experiment/gen1=base.yaml
+    - dataset.path=/home/as4296/palmer_scratch/vit/gen1
+    - dataset.downsample_by_factor_2=False
+    - hardware.gpus=[0,1,2,3,4,5,6,7]
+    - batch_size.train=8
+    - batch_size.eval=8
+    - hardware.num_workers.train=2
+    - hardware.num_workers.eval=2
+    - validation.val_check_interval=10000
+    - validation.check_val_every_n_epoch=null
+    - training.max_steps=300000
+    - dataset.sequence_length=5
+    - training.learning_rate=0.0002
+    - encoder_model.encoder.num_blocks=[2,2,2,2]
+  job:
+    name: train_ddp_process_7
+    chdir: null
+    override_dirname: +experiment/gen1=base.yaml,batch_size.eval=8,batch_size.train=8,dataset.downsample_by_factor_2=False,dataset.path=/home/as4296/palmer_scratch/vit/gen1,dataset.sequence_length=5,dataset=gen1,encoder_model.encoder.num_blocks=[2,2,2,2],encoder_model=encoder,hardware.gpus=[0,1,2,3,4,5,6,7],hardware.num_workers.eval=2,hardware.num_workers.train=2,model=rnndet,training.learning_rate=0.0002,training.max_steps=300000,validation.check_val_every_n_epoch=null,validation.val_check_interval=10000
+    id: ???
+    num: ???
+    config_name: train
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.3.2
+    version_base: '1.2'
+    cwd: /gpfs/gibbs/project/panda/as4296/SpikingVit
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: /gpfs/gibbs/project/panda/as4296/SpikingVit/conf
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: /gpfs/gibbs/project/panda/as4296/SpikingVit
+    choices:
+      experiment/gen1: base.yaml
+      model/maxvit_yolox: default
+      encoder_model: encoder
+      dataset: gen1
+      model: rnndet
+      model/dataset: rnndet_gen1
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: basic
+      hydra/output: default
+  verbose: false

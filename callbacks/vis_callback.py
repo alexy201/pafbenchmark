@@ -17,6 +17,10 @@ from utils.ev_repr_to_img import ev_repr_to_img
 from utils.evaluation.prophesee.visualize.vis_utils import draw_bboxes, LABELMAP_GEN1, LABELMAP_GEN4_SHORT
 
 
+class EmptyCallback(Callback):
+    """A do-nothing placeholder to satisfy Trainer.callbacks."""
+    pass
+
 class DetectionVizEnum(Enum):
     EV_IMG = auto()
     LABEL_IMG_PROPH = auto()

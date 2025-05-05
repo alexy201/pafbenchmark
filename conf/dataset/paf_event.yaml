@@ -1,0 +1,21 @@
+# conf/dataset/paf_event.yaml
+# ────────────────────────────
+# Tell Hydra how to find your train/raw folders, class list & voxelization params.
+
+# this name drives your fetch_data_module → PAFEventDataModule
+name: paf_event
+
+# paths to your folders
+train_folder: /home/as4296/palmer_scratch/vit/paf/train
+raw_folder:   /home/as4296/palmer_scratch/vit/paf/raw
+classnames:   /home/as4296/palmer_scratch/vit/paf/train/classes.json
+
+# how many temporal bins, and the sensor resolution
+num_bins: 8
+height:   260
+width:    346
+
+# (optionally override default batch‐size here, or leave it to the top‐level batch_size.train)
+# batch_size:
+#   train: 7
+#   eval:  1

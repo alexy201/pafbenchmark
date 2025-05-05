@@ -216,7 +216,7 @@ class Module(pl.LightningModule):
         sparse_obj_labels = data[DataType.OBJLABELS_SEQ]
         sequence_len = len(ev_tensor_sequence)
         assert sequence_len > 0
-        batch_size = len(sparse_obj_labels[0])
+        batch_size = len(sparse_obj_labels)
         if self.mode_2_batch_size[mode] is None:
             self.mode_2_batch_size[mode] = batch_size
         else:

@@ -19,6 +19,9 @@ def get_original_hw(dataset_type: DatasetType):
 
 def get_dataloading_hw(dataset_config: DictConfig):
     dataset_name = dataset_config.name
+    if dataset_name == 'paf_event':
+        return dataset_config.height, dataset_config.width
+
     hw = get_original_hw(dataset_type=_str_2_type[dataset_name])
     downsample_by_factor_2 = dataset_config.downsample_by_factor_2
     if downsample_by_factor_2:
