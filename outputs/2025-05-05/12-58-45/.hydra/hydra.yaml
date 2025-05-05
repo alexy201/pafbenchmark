@@ -1,0 +1,182 @@
+hydra:
+  run:
+    dir: outputs/${now:%Y-%m-%d}/${now:%H-%M-%S}
+  sweep:
+    dir: multirun/${now:%Y-%m-%d}/${now:%H-%M-%S}
+    subdir: ${hydra.job.num}
+  launcher:
+    _target_: hydra._internal.core_plugins.basic_launcher.BasicLauncher
+  sweeper:
+    _target_: hydra._internal.core_plugins.basic_sweeper.BasicSweeper
+    max_batch_size: null
+    params: null
+  help:
+    app_name: ${hydra.job.name}
+    header: '${hydra.help.app_name} is powered by Hydra.
+
+      '
+    footer: 'Powered by Hydra (https://hydra.cc)
+
+      Use --hydra-help to view Hydra specific help
+
+      '
+    template: '${hydra.help.header}
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (group=option)
+
+
+      $APP_CONFIG_GROUPS
+
+
+      == Config ==
+
+      Override anything in the config (foo.bar=value)
+
+
+      $CONFIG
+
+
+      ${hydra.help.footer}
+
+      '
+  hydra_help:
+    template: 'Hydra (${hydra.runtime.version})
+
+      See https://hydra.cc for more info.
+
+
+      == Flags ==
+
+      $FLAGS_HELP
+
+
+      == Configuration groups ==
+
+      Compose your configuration from those groups (For example, append hydra/job_logging=disabled
+      to command line)
+
+
+      $HYDRA_CONFIG_GROUPS
+
+
+      Use ''--cfg hydra'' to Show the Hydra config.
+
+      '
+    hydra_help: ???
+  hydra_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][HYDRA] %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+    root:
+      level: INFO
+      handlers:
+      - console
+    loggers:
+      logging_example:
+        level: DEBUG
+    disable_existing_loggers: false
+  job_logging:
+    version: 1
+    formatters:
+      simple:
+        format: '[%(asctime)s][%(name)s][%(levelname)s] - %(message)s'
+    handlers:
+      console:
+        class: logging.StreamHandler
+        formatter: simple
+        stream: ext://sys.stdout
+      file:
+        class: logging.FileHandler
+        formatter: simple
+        filename: ${hydra.runtime.output_dir}/${hydra.job.name}.log
+    root:
+      level: INFO
+      handlers:
+      - console
+      - file
+    disable_existing_loggers: false
+  env: {}
+  mode: RUN
+  searchpath: []
+  callbacks: {}
+  output_subdir: .hydra
+  overrides:
+    hydra:
+    - hydra.mode=RUN
+    task:
+    - model=rnndet
+    - encoder_model=encoder
+    - dataset=paf_event
+    - +experiment/paf_event=base.yaml
+    - dataset.train_folder=/home/as4296/palmer_scratch/vit/paf/train
+    - dataset.raw_folder=/home/as4296/palmer_scratch/vit/paf/raw
+    - dataset.classnames=/home/as4296/palmer_scratch/vit/paf/train/classes.json
+    - dataset.num_bins=20
+    - dataset.height=260
+    - dataset.width=346
+    - hardware.gpus=[0]
+    - batch_size.train=10
+    - batch_size.eval=10
+    - hardware.num_workers.train=4
+    - hardware.num_workers.eval=4
+    - validation.val_check_interval=10000
+    - validation.check_val_every_n_epoch=null
+    - training.max_steps=300000
+    - training.learning_rate=0.0003
+    - encoder_model.encoder.num_blocks=[2,2,2,2]
+    - logging.train.high_dim.enable=false
+    - logging.validation.high_dim.enable=false
+  job:
+    name: train
+    chdir: null
+    override_dirname: +experiment/paf_event=base.yaml,batch_size.eval=10,batch_size.train=10,dataset.classnames=/home/as4296/palmer_scratch/vit/paf/train/classes.json,dataset.height=260,dataset.num_bins=20,dataset.raw_folder=/home/as4296/palmer_scratch/vit/paf/raw,dataset.train_folder=/home/as4296/palmer_scratch/vit/paf/train,dataset.width=346,dataset=paf_event,encoder_model.encoder.num_blocks=[2,2,2,2],encoder_model=encoder,hardware.gpus=[0],hardware.num_workers.eval=4,hardware.num_workers.train=4,logging.train.high_dim.enable=false,logging.validation.high_dim.enable=false,model=rnndet,training.learning_rate=0.0003,training.max_steps=300000,validation.check_val_every_n_epoch=null,validation.val_check_interval=10000
+    id: ???
+    num: ???
+    config_name: train
+    env_set: {}
+    env_copy: []
+    config:
+      override_dirname:
+        kv_sep: '='
+        item_sep: ','
+        exclude_keys: []
+  runtime:
+    version: 1.3.2
+    version_base: '1.2'
+    cwd: /gpfs/gibbs/project/panda/as4296/SpikingVit
+    config_sources:
+    - path: hydra.conf
+      schema: pkg
+      provider: hydra
+    - path: /gpfs/gibbs/project/panda/as4296/SpikingVit/conf
+      schema: file
+      provider: main
+    - path: ''
+      schema: structured
+      provider: schema
+    output_dir: /gpfs/gibbs/project/panda/as4296/SpikingVit/outputs/2025-05-05/12-58-45
+    choices:
+      experiment/paf_event: base.yaml
+      model/maxvit_yolox: default
+      encoder_model: encoder
+      dataset: paf_event
+      model: rnndet
+      model/dataset: rnndet_paf_event
+      hydra/env: default
+      hydra/callbacks: null
+      hydra/job_logging: default
+      hydra/hydra_logging: default
+      hydra/hydra_help: default
+      hydra/help: default
+      hydra/sweeper: basic
+      hydra/launcher: basic
+      hydra/output: default
+  verbose: false

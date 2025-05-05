@@ -5,6 +5,7 @@ import string
 
 import torch
 from torch.utils.data import Dataset
+from torch.utils.data import get_worker_info
 
 from data.paf_utils.aedat_utils import getDVSeventsDavis
 from data.paf_utils.voxels import events_to_voxel
@@ -125,43 +126,53 @@ class PAFEventDetectionDataset(Dataset):
 
 
 def paf_event_collate(batch):
-    # stack voxels
+    worker_info = get_worker_info()
+    worker_id = worker_info.id if worker_info is not None else 0
+
+    # 1) stack into [B, C, D, H, W]
     voxels = torch.stack([b[0] for b in batch], dim=0)
-    B, C, D, H, W = voxels.shape  # adapt dims if needed
+    B, C, D, H, W = voxels.shape
 
-    ev_sequence = [ voxels[:, :, d] for d in range(D) ]
+    # 2) split into a Python list of D tensors [B,C,H,W]
+    ev_sequence = [voxels[:, :, t] for t in range(D)]
 
-    is_first = torch.ones(B, dtype=torch.bool)
-
-    # build sparse object labels per batch
-    obj_labels_list = []
+    # 3) build the one S-B-O-L for the *last* bin
+    last_obj_labels = []
     for _, boxes, labels in batch:
         if boxes.numel() == 0:
-            empty_lbl = ObjectLabels(
-                object_labels = torch.empty((0, len(ObjectLabelBase._str2idx)), dtype=torch.float32),
-                input_size_hw = (H, W)
+            last_obj_labels.append(None)
+        else:
+            N = boxes.size(0)
+            lbl = torch.zeros((N, len(ObjectLabelBase._str2idx)), dtype=torch.float32)
+            lbl[:, ObjectLabelBase._str2idx['t']]              = 0
+            lbl[:, ObjectLabelBase._str2idx['x']]              = boxes[:, 0]
+            lbl[:, ObjectLabelBase._str2idx['y']]              = boxes[:, 1]
+            lbl[:, ObjectLabelBase._str2idx['w']]              = boxes[:, 2] - boxes[:, 0]
+            lbl[:, ObjectLabelBase._str2idx['h']]              = boxes[:, 3] - boxes[:, 1]
+            lbl[:, ObjectLabelBase._str2idx['class_id']]       = labels
+            lbl[:, ObjectLabelBase._str2idx['class_confidence']] = 1.0
+            last_obj_labels.append(
+                ObjectLabels(object_labels=lbl, input_size_hw=(H, W))
             )
-            obj_labels_list.append(empty_lbl)
-            continue
-        N = boxes.shape[0]
-        # create label tensor [N, 7]
-        lbl = torch.zeros((N, len(ObjectLabelBase._str2idx)), dtype=torch.float32)
-        lbl[:, ObjectLabelBase._str2idx['t']] = 0
-        lbl[:, ObjectLabelBase._str2idx['x']] = boxes[:, 0]
-        lbl[:, ObjectLabelBase._str2idx['y']] = boxes[:, 1]
-        lbl[:, ObjectLabelBase._str2idx['w']] = boxes[:, 2] - boxes[:, 0]
-        lbl[:, ObjectLabelBase._str2idx['h']] = boxes[:, 3] - boxes[:, 1]
-        lbl[:, ObjectLabelBase._str2idx['class_id']] = labels
-        lbl[:, ObjectLabelBase._str2idx['class_confidence']] = 1.0
+    sparse_last = SparselyBatchedObjectLabels(last_obj_labels)
 
-        obj_labels = ObjectLabels(object_labels=lbl, input_size_hw=(H, W))
-        obj_labels_list.append(obj_labels)
+    # 4) now build a list of length D containing S-B-O-L at each time-step
+    objlabel_sequence: list[SparselyBatchedObjectLabels] = []
+    for t in range(D):
+        if t < D - 1:
+            # no ground-truth until the last bin
+            objlabel_sequence.append(SparselyBatchedObjectLabels([None] * B))
+        else:
+            objlabel_sequence.append(sparse_last)
 
-    sparse_labels = SparselyBatchedObjectLabels(obj_labels_list)
+    # 5) you only need the “is first sample” mask once, before the unroll
+    is_first = torch.ones(B, dtype=torch.bool)
+
     return {
+        'worker_id': worker_id,
         'data': {
-            DataType.EV_REPR: ev_sequence,
-            DataType.OBJLABELS_SEQ: sparse_labels,
-            DataType.IS_FIRST_SAMPLE: is_first,
+            DataType.EV_REPR:       ev_sequence,       # List[Tensor[B,C,H,W]] length D
+            DataType.OBJLABELS_SEQ: objlabel_sequence,  # List[SparselyBatchedObjectLabels] length D
+            DataType.IS_FIRST_SAMPLE: is_first,         # Tensor[B]
         }
     }

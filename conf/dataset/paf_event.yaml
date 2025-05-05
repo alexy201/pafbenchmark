@@ -11,7 +11,7 @@ raw_folder:   /home/as4296/palmer_scratch/vit/paf/raw
 classnames:   /home/as4296/palmer_scratch/vit/paf/train/classes.json
 
 # how many temporal bins, and the sensor resolution
-num_bins: 8
+num_bins: 20
 height:   260
 width:    346
 

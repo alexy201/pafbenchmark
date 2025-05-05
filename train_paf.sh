@@ -7,7 +7,7 @@ python train.py \
   dataset.train_folder=/home/as4296/palmer_scratch/vit/paf/train \
   dataset.raw_folder=/home/as4296/palmer_scratch/vit/paf/raw \
   dataset.classnames=/home/as4296/palmer_scratch/vit/paf/train/classes.json \
-  dataset.num_bins=8 \
+  dataset.num_bins=20 \
   dataset.height=260 \
   dataset.width=346 \
   hardware.gpus=[0] \
